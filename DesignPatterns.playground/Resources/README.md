@@ -4,7 +4,7 @@ Practican experimentation of atleast 20 design patterns available in the open in
 ### Behavioural Design Patterns 
 - [x] Memento
 - [x] State Pattern
-- [ ] Chain of Responsibility Pattern
+- [x] Chain of Responsibility Pattern
 - [ ] Command Pattern
 - [ ] Iterator Pattern
 - [ ] Mediator Pattern
