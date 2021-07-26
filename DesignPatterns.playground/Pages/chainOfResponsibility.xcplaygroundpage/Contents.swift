@@ -12,19 +12,37 @@ import Foundation
 
 // out ATM has 100Rs, 500Rs, 2000Rs notes
 
-protocol ATMMoneyDespensable {
-    var successor: ATMMoneyDespensable? { get }
+// this protocol should be imlemented by class, since we have a muttaing behaviour inside extension.
+protocol ATMMoneyDespensable: AnyObject {
+
+    var successor: ATMMoneyDespensable? { get set }
 
     func handle(for amount: Int)
     func setSuccesor(next chain: ATMMoneyDespensable)
 
+
+}
+
+extension ATMMoneyDespensable {
+    
+    func setSuccesor(next chain: ATMMoneyDespensable) {
+        self.successor = chain
+    }
+    
+    func handle(for amount: Int) {
+        self.successor?.handle(for: amount)
+    }
+    
 }
 
 class TwoKMoneyHandler: ATMMoneyDespensable {
-  
-    private(set) var successor: ATMMoneyDespensable? = nil
+ 
+    var successor: ATMMoneyDespensable? = nil
     
-    init() {}
+    init() {
+        // let's set the successor here
+        successor = FiveHMoneyHandler()
+    }
     
     func handle(for amount: Int) {
         if amount >= 2000 {
@@ -35,18 +53,16 @@ class TwoKMoneyHandler: ATMMoneyDespensable {
             self.successor?.handle(for: amount)
         }
     }
-    
-    func setSuccesor(next chain: ATMMoneyDespensable) {
-        self.successor = chain
-    }
 
 }
 
 class FiveHMoneyHandler: ATMMoneyDespensable {
   
-    private(set) var successor: ATMMoneyDespensable? = nil
+    var successor: ATMMoneyDespensable? = nil
     
-    init() {}
+    init() {
+        successor = OneHMoneyHandler()
+    }
     
     func handle(for amount: Int) {
         if amount >= 500 {
@@ -57,16 +73,12 @@ class FiveHMoneyHandler: ATMMoneyDespensable {
             self.successor?.handle(for: amount)
         }
     }
-    
-    func setSuccesor(next chain: ATMMoneyDespensable) {
-        self.successor = chain
-    }
 
 }
 
 class OneHMoneyHandler: ATMMoneyDespensable {
   
-    private(set) var successor: ATMMoneyDespensable? = nil
+    var successor: ATMMoneyDespensable? = nil
     
     init() {}
     
@@ -82,19 +94,25 @@ class OneHMoneyHandler: ATMMoneyDespensable {
             print("Could not withdraw this amount -- \(amount).")
         }
     }
+
+}
+
+class ATM {
+
+    var handler: ATMMoneyDespensable
     
-    func setSuccesor(next chain: ATMMoneyDespensable) {
-        self.successor = chain
+    init(with handler: ATMMoneyDespensable) {
+        // client is only aware of one handler
+        self.handler = handler
+    }
+    
+    func withdraw(_ amount: Int) {
+        handler.handle(for: amount)
     }
 
 }
 
-let chain1 = TwoKMoneyHandler()
-let chain2 = FiveHMoneyHandler()
-let chain3 = OneHMoneyHandler()
-chain1.setSuccesor(next: chain2)
-chain2.setSuccesor(next: chain3)
-
-chain1.handle(for: 2650)
+let atm = ATM(with: TwoKMoneyHandler())
+atm.withdraw(2560)
 
 //: [Next](@next)
