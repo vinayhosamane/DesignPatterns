@@ -3,5 +3,6 @@
     <pages>
         <page name='memento'/>
         <page name='state'/>
+        <page name='chainOfResponsibility'/>
     </pages>
 </playground>
