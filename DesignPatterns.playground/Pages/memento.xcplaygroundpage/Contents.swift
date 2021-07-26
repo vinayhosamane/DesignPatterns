@@ -1,6 +1,7 @@
 //: [Previous](@previous)
 
 import Foundation
+import XCTest
 
 // Memento design pattern
 
@@ -40,7 +41,7 @@ class Editor {
     }
     
     func createEditorState() -> EditorState {
-        return EditorState(with: content)
+        return EditorState(with: String(content.last!))
     }
     
     func undo() {
@@ -103,5 +104,23 @@ class Notepad {
 
 let editor = Notepad()
 editor.draw()
+
+class EditorTests: XCTestCase {
+    
+    func testContentInEditor() {
+        let editor = Editor()
+        
+        editor.setContent(with: "a")
+        editor.setContent(with: "b")
+        editor.setContent(with: "c")
+        
+        editor.undo()
+        
+        XCTAssert(editor.getContent() == "ab")
+    }
+    
+}
+
+EditorTests().testContentInEditor()
 
 //: [Next](@next)
