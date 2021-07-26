@@ -70,3 +70,5 @@ canvas.setCurrentTool(with: SelectionTool())
 
 canvas.mouseDown()
 canvas.mouseUp()
+
+// It gives glimpses of how open closed (open for extension, closed for modification) principle from SOLID gonna look like. Here different tools can be created without touching or modifying code in Canvas class.
